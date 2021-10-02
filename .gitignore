@@ -7,3 +7,6 @@ userSpecific/*
 !userSpecific/buildConfig.default.sh
 !userSpecific/globalVariables.default.sh
 /sync.ffs_db
+**/generated/
+**/*.zip
+**/.ipynb_checkpoints/

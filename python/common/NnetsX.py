@@ -66,11 +66,11 @@ class NNets(object):
 		for i in range(_nbConv - 1):
 			x = Conv2D(_nbFilters, (_nbRow, _nbCol), padding=_self.m_BorderMode)(x)
 			if _self.m_BatchNormalization != BATCH_NORMALIZATION_NO:
-				x = BatchNormalization(axis=FEATURE_AXIS)(x)
+				x = BatchNormalization(axis=-1)(x)
 			x = _self.m_SamePartActivation(x)
 		x = Conv2D(_nbFilters, (_nbRow, _nbCol), padding=_self.m_BorderMode)(x)
 		if _self.m_BatchNormalization != BATCH_NORMALIZATION_NO:
-			x = BatchNormalization(axis=FEATURE_AXIS)(x)
+			x = BatchNormalization(axis=-1)(x)
 		# print("x.shape " + str(x.shape))
 		if _self.m_Residual == True:
 			x = tf.keras.layers.add([x, _inputs])
@@ -86,7 +86,7 @@ class NNets(object):
 		else:
 			x = Conv2D(_nbFilters, (2, 2), padding=_self.m_BorderMode, strides=(2,2))(_inputs)
 			if _self.m_BatchNormalization != BATCH_NORMALIZATION_NO:
-				x = BatchNormalization(axis=FEATURE_AXIS)(x)
+				x = BatchNormalization(axis=-1)(x)
 			x = _self.m_SamePartActivation(x)
 		return x
 		
@@ -115,7 +115,7 @@ class NNets(object):
 			assert False
 			# x = Deconvolution2D(_nbFilters, 2, 2, output_shape=_outputShape, padding=_self.m_BorderMode, strides=(2,2))(_inputs)
 		if _self.m_BatchNormalization != BATCH_NORMALIZATION_NO:
-			x = BatchNormalization(axis=FEATURE_AXIS)(x)	
+			x = BatchNormalization(axis=-1)(x)
 		x = _self.m_SamePartActivation(x)
 		return x
 
@@ -127,7 +127,7 @@ class NNets(object):
 			upBlock = _self.UpsampleBlock(residualUpBlock, _nbFilters)
 			# print("upBlock.shape " + str(upBlock.shape))
 			# upBlock = Dropout(0.5)(upBlock)
-			mergeBlock = tf.keras.layers.concatenate([upBlock, _inputLevels[i]], axis=FEATURE_AXIS)
+			mergeBlock = tf.keras.layers.concatenate([upBlock, _inputLevels[i]], axis=-1)
 			residualUpBlock = _self.ResidualBlock(mergeBlock, _convPerLevel[i], _nbFilters*2, _kernelSize, _kernelSize)
 			levels.append(residualUpBlock)
 		return levels

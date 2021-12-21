@@ -8,7 +8,8 @@ from FluoroDataObject import *
 from NnetsX import *
 
 import PyTACELib
-
+import inspect
+print(inspect.getfile(PyTACELib))
 # PYTACELIB_DEBUG_OUTPUT = True
 PYTACELIB_DEBUG_OUTPUT = False
 
@@ -50,6 +51,7 @@ def GetCenterline(_image, _imgInfo = None):
 	if _imgInfo != None:
 		centerline = centerline + (_imgInfo[INFO_PAD_X] + _imgInfo[INFO_DIAPHRAGM_X1], _imgInfo[INFO_PAD_Y] + _imgInfo[INFO_DIAPHRAGM_Y1])
 	centerline = centerline.clip((0, 0), (_image.shape[1] - SMALL_POSITIVE_NUMBER, _image.shape[0] - SMALL_POSITIVE_NUMBER))
+	print(SMALL_POSITIVE_NUMBER)
 	
 	if PYTACELIB_DEBUG_OUTPUT == True:
 		return centerline, debugStepList

@@ -6,7 +6,12 @@ _PYTHON_FILE=${_PYTHON_FILE:0:-3}
 _PWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 mkdir -p generated
-
+#echo $_PYTHON_FILE
+#echo $_PWD
+#echo $PWD
+#echo $_PROJECT_PATH
+#echo $_PYTHON
+#echo $_PWD/$_PYTHON_FILE.py
 $_PYTHON -u "$_PWD/$_PYTHON_FILE.py"
 
 if [ "$1" != "-nopause" ]; then

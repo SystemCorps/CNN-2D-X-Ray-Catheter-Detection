@@ -95,43 +95,68 @@ def loadAlignedBatch(x_batch, h=256, w=256):
 
 
 class entireDataGen(tf.keras.utils.Sequence):
-    def __init__(self, ps_dict, ps_root, hyper, batch_size, valid=False, tipOnly=True):
+    def __init__(self, ps_dict, ps_root, hyper, batch_size, valid=False, tipOnly=True, target_p=None, target_s=None, shuffle=True):
         self.valid = valid
         self.x_lists = []
         self.y_lists = []
         self.hyper = hyper
         self.batch_size = batch_size
-        for p in ps_dict.keys():
-            for s in ps_dict[p]:
-                if isinstance(p, int):
-                    pd = '%02d' % p
-                else:
-                    pd = p
-                if isinstance(s, int):
-                    sd = 'set%02d' % s
-                else:
-                    sd = s
-                root = os.path.join(ps_root, pd)
-                root = os.path.join(root, sd)
-                x_temp = glob(os.path.join(root, 'fluoroReal/*.png'))
-                x_temp.sort()
-                x_temp = inputAlignDirs(x_temp)
-                if tipOnly:
-                    y_temp = glob(os.path.join(root, 'fluoroTip_DN/*.png'))
-                else:
-                    y_temp = glob(os.path.join(root, 'fluoroAll_DN/*.png'))
-                y_temp.sort()
-                if len(x_temp) == 0 or len(y_temp) == 0:
-                    print(root)
-                    continue
-                if len(x_temp) != len(y_temp):
-                    print(root)
-                    continue
-                self.x_lists.extend(x_temp)
-                self.y_lists.extend(y_temp)
+        self.shuffle = shuffle
+        if target_p is None and target_s is None:
+            for p in ps_dict.keys():
+                for s in ps_dict[p]:
+                    if isinstance(p, int):
+                        pd = '%02d' % p
+                    else:
+                        pd = p
+                    if isinstance(s, int):
+                        sd = 'set%02d' % s
+                    else:
+                        sd = s
+                    root = os.path.join(ps_root, pd)
+                    root = os.path.join(root, sd)
+                    x_temp = glob(os.path.join(root, 'fluoroReal/*.png'))
+                    x_temp.sort()
+                    x_temp = inputAlignDirs(x_temp)
+                    if tipOnly:
+                        y_temp = glob(os.path.join(root, 'fluoroTip_DN/*.png'))
+                    else:
+                        y_temp = glob(os.path.join(root, 'fluoroAll_DN/*.png'))
+                    y_temp.sort()
+                    if len(x_temp) == 0 or len(y_temp) == 0:
+                        print(root)
+                        continue
+                    if len(x_temp) != len(y_temp):
+                        print(root)
+                        continue
+                    self.x_lists.extend(x_temp)
+                    self.y_lists.extend(y_temp)
+        else:
+            if isinstance(target_p, int):
+                pd = '%02d' % target_p
+            else:
+                pd = target_p
+            if isinstance(target_s, int):
+                sd = 'set%02d' % target_s
+            else:
+                sd = target_s
+            root = os.path.join(ps_root, pd)
+            root = os.path.join(root, sd)
+            x_temp = glob(os.path.join(root, 'fluoroReal/*.png'))
+            x_temp.sort()
+            x_temp = inputAlignDirs(x_temp)
+            if tipOnly:
+                y_temp = glob(os.path.join(root, 'fluoroTip_DN/*.png'))
+            else:
+                y_temp = glob(os.path.join(root, 'fluoroAll_DN/*.png'))
+            y_temp.sort()
+            self.x_lists.extend(x_temp)
+            self.y_lists.extend(y_temp)
+            
         seed = 80433
-        random.Random(seed).shuffle(self.x_lists)
-        random.Random(seed).shuffle(self.y_lists)
+        if shuffle:
+            random.Random(seed).shuffle(self.x_lists)
+            random.Random(seed).shuffle(self.y_lists)
 
         self.batch_size = batch_size
 

@@ -47,7 +47,7 @@ epochs = 300
 n_channel = 4
 input_shape = (256,256,n_channel)
 
-save_dir = '../FluSegTip_1104'
+save_dir = '../FluSegTip_entire'
 
 now = datetime.datetime.now()
 trial_date = "{:02d}{:02d}_{:02d}{:02d}{:02d}".format(now.month, now.day, now.hour, now.minute, now.second)
@@ -100,8 +100,7 @@ scale = {"x": (1.-scale_add, 1.+scale_add), "y": (1.-scale_add, 1.+scale_add)}
 translation = {"x": (-trans, trans), "y": (-trans, trans)}
 rotate = (-rot, rot) # Degree
 
-#ps_dict_root = '/docker/entire_list_1011.pkl'
-ps_dict_root = '/docker/i2i/EntireData/entire_for_seg.pkl'
+ps_dict_root = '/docker/entire_list_1011.pkl'
 ps_dict = pk.load(open(ps_dict_root, 'rb'))
 ps_root = '/docker/i2i/EntireData'
 
@@ -137,5 +136,5 @@ model.fit(train_gen,
           steps_per_epoch=steps_per_epoch,
           validation_data=valid_gen,
           callbacks=callbacks,
-          workers=8,
+          workers=6,
           max_queue_size=100)

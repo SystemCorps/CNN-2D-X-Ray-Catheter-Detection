@@ -95,7 +95,7 @@ def loadAlignedBatch(x_batch, h=256, w=256):
 
 
 class entireDataGen(tf.keras.utils.Sequence):
-    def __init__(self, ps_dict, ps_root, hyper, batch_size, valid=False):
+    def __init__(self, ps_dict, ps_root, hyper, batch_size, valid=False, tipOnly=True):
         self.valid = valid
         self.x_lists = []
         self.y_lists = []
@@ -116,7 +116,10 @@ class entireDataGen(tf.keras.utils.Sequence):
                 x_temp = glob(os.path.join(root, 'fluoroReal/*.png'))
                 x_temp.sort()
                 x_temp = inputAlignDirs(x_temp)
-                y_temp = glob(os.path.join(root, 'fluoroAll_DN/*.png'))
+                if tipOnly:
+                    y_temp = glob(os.path.join(root, 'fluoroTip_DN/*.png'))
+                else:
+                    y_temp = glob(os.path.join(root, 'fluoroAll_DN/*.png'))
                 y_temp.sort()
                 if len(x_temp) == 0 or len(y_temp) == 0:
                     print(root)

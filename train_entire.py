@@ -47,7 +47,7 @@ epochs = 300
 n_channel = 4
 input_shape = (256,256,n_channel)
 
-save_dir = '../FluSeg_entire'
+save_dir = '../FluSegTip_entire'
 
 now = datetime.datetime.now()
 trial_date = "{:02d}{:02d}_{:02d}{:02d}{:02d}".format(now.month, now.day, now.hour, now.minute, now.second)
@@ -117,8 +117,8 @@ hyper = {'Width':256, 'Height':256,
          'Epochs':epochs}
 
 
-train_gen = utils.entireDataGen(ps_dict['train'], ps_root, hyper, batch_size=batch_size)
-valid_gen = utils.entireDataGen(ps_dict['valid'], ps_root, hyper, batch_size=batch_size, valid=True)
+train_gen = utils.entireDataGen(ps_dict['train'], ps_root, hyper, batch_size=batch_size, tipOnly=True)
+valid_gen = utils.entireDataGen(ps_dict['valid'], ps_root, hyper, batch_size=batch_size, valid=True, tipOnly=True)
 
 tbcallback = TensorBoard(log_dir=sum_dir)
 checkpoint = ModelCheckpoint(filepath=model_name,
